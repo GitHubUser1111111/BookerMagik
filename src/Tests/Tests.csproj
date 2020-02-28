@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookerMagikCore\BookerMagikCore.csproj" />
     <ProjectReference Include="..\WebApi\SystemStateService.csproj" />
   </ItemGroup>
 </Project>
