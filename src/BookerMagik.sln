@@ -12,9 +12,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PinnacleWrapper", "Pinnacle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleConsoleApp", "SampleConsoleApp\SampleConsoleApp.csproj", "{1F93DF3C-F8C2-4928-BDA4-939B4A4BA108}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api-ng-sample-code", "Api-ng-sample-code\Api-ng-sample-code.csproj", "{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookerMagikCore", "BookerMagikCore\BookerMagikCore.csproj", "{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookerMagikCore", "BookerMagikCore\BookerMagikCore.csproj", "{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetfairApi", "BetfairApi\BetfairApi.csproj", "{F3881585-F5A5-4552-9308-D2EB71A7F040}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,12 +64,6 @@ Global
 		{1F93DF3C-F8C2-4928-BDA4-939B4A4BA108}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F93DF3C-F8C2-4928-BDA4-939B4A4BA108}.Release|x86.ActiveCfg = Release|Any CPU
 		{1F93DF3C-F8C2-4928-BDA4-939B4A4BA108}.Release|x86.Build.0 = Release|Any CPU
-		{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}.Debug|x86.ActiveCfg = Debug|x86
-		{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}.Debug|x86.Build.0 = Debug|x86
-		{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}.Release|Any CPU.ActiveCfg = Release|x86
-		{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}.Release|x86.ActiveCfg = Release|x86
-		{6B5844C4-BBF3-43D9-9B58-6AEA1FC6E548}.Release|x86.Build.0 = Release|x86
 		{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -78,6 +72,14 @@ Global
 		{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}.Release|x86.ActiveCfg = Release|Any CPU
 		{7DB41A8A-EEB8-48A1-8E3D-F1BF440784B6}.Release|x86.Build.0 = Release|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Debug|x86.Build.0 = Debug|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Release|x86.ActiveCfg = Release|Any CPU
+		{F3881585-F5A5-4552-9308-D2EB71A7F040}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

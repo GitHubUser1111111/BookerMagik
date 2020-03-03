@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BetfairApi\BetfairApi.csproj" />
     <ProjectReference Include="..\PinnacleWrapper\PinnacleWrapper.csproj" />
   </ItemGroup>
 
