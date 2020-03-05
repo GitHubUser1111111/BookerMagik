@@ -13,7 +13,9 @@ namespace BetfairApi
         Task<IList<EventTypeResult>> listEventTypes(MarketFilter marketFilter, string locale = null);
 
         Task<IList<EventResult>> listEvents(MarketFilter marketFilter, string locale = null);
-        
+
+        Task<IList<CompetitionResult>> listCompetitions(MarketFilter marketFilter, string locale = null);
+
         /**
          * calls api-ng to get a list of market catalogues
          * */

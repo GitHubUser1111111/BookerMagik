@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BetfairApi;
 using BetfairApi.TO;
 using BetfairBookmaker.Contracts;
 using BetfairBookmaker.Models;
 using BookerMagikCore.Bookmaker;
+using EntityLibrary.Abstract.Sport;
+using EntityLibrary.Business.Sport.Football;
 using Newtonsoft.Json;
 
 namespace BetfairBookmaker
@@ -31,7 +34,7 @@ namespace BetfairBookmaker
             return await Task.FromResult(true);
         }
 
-        public override async Task<bool> ReadEvents()
+        public override async Task<IEnumerable<FootballSportEvent>> ReadEvents()
         {
             var time = new TimeRange { From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays) };
             var marketFilter = new MarketFilter
@@ -47,7 +50,38 @@ namespace BetfairBookmaker
             marketProjections.Add(MarketProjection.RUNNER_METADATA);
             var listEvents = await api.listEvents(marketFilter);
 
-            return true;
+            var footballSportEvents = new List<FootballSportEvent>();
+
+            foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
+            {
+                var name = sportEvent.Event.Name;
+                if (!name.Contains(" v "))
+                    continue;
+
+                var teams = name.Split(" v ");
+                var eventTime = sportEvent.Event.OpenDate.Value;
+                var footballSportEvent =
+                    new FootballSportEvent(eventTime, new FootballTeam(teams[0].Trim()), new FootballTeam(teams[1].Trim()));
+
+                footballSportEvents.Add(footballSportEvent);
+            }
+
+            return footballSportEvents;
+        }
+
+        public override async Task<IEnumerable<SportLeague>> ReadLeagues()
+        {
+            var marketFilter = new MarketFilter
+            {
+                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
+                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
+            };
+
+            var leagues = await api.listCompetitions(marketFilter);
+
+            List<SportLeague> result = new List<SportLeague>();
+            result.AddRange(leagues.Select(x => new SportLeague(x.Competition.Name)));
+            return result;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace BookerMagikCore.Sport
 
         public bool CheckIsSameEvents(SportEventAbstract a, SportEventAbstract b)
         {
-            if (a.KindOfSport != b.KindOfSport)
+            if (a.Sport != b.Sport)
                 // dif by kind of sport
                 return false;
 
@@ -40,6 +40,9 @@ namespace BookerMagikCore.Sport
             var h2 = a.AwayTeam.Name.ToLower();
             var h11 = b.HomeTeam.Name.ToLower();
             var h22 = b.AwayTeam.Name.ToLower();
+
+            // first N symbols
+            return h1.StartsWith(h11.Substring(0, 3)) && h2.StartsWith(h22.Substring(0, 3));
 
 
             if (h1.Equals(h11) && h2.Equals(h22))
@@ -78,7 +81,7 @@ namespace BookerMagikCore.Sport
             }
             
             // away
-            for (int i = 0; i < h1count.Count; i++)
+            for (int i = 0; i < h2count.Count; i++)
             {
                 var d = CalculateDistance(h2count[i], h22count[i]);
                 if (d >= threashold)
@@ -88,6 +91,27 @@ namespace BookerMagikCore.Sport
             }
             
             return totalDistance < threashold;
+        }
+
+        public bool CheckIsSameLeague(SportLeague a, SportLeague b)
+        {
+            var splitsA = a.Name.Split(' ', '-');
+            var splitsB = b.Name.Split(' ', '-');
+            if (splitsA.Length != splitsB.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < splitsA.Length; i++)
+            {
+                if (splitsA[i].Length < 3 || splitsB[i].Length < 3)
+                    return false;
+
+                if (splitsA[i] != splitsB[i] && !splitsA[i].StartsWith(splitsB[i].Substring(0, 3)))
+                    return false;
+            }
+
+            return true;
         }
 
         private int CalculateDistance(string a, string b)

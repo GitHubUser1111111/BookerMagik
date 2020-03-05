@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using EntityLibrary.Abstract.Sport;
 using EntityLibrary.Business.Sport.Odd;
 
 namespace EntityLibrary.Business.Sport.Football
 {
+    [DebuggerDisplay("{StartTime}: {HomeTeam.Name} vs {AwayTeam.Name}")]
     public class FootballSportEvent : SportEventAbstract
     {
         /// <summary>

@@ -22,6 +22,7 @@ namespace BetfairApi
         public const string SESSION_TOKEN_HEADER = "X-Authentication";
         private static readonly string LIST_EVENT_TYPES_METHOD = "listEventTypes";
         private static readonly string LIST_EVENTS_METHOD = "listEvents";
+        private static readonly string LIST_COMPETITIONS_METHOD = "listCompetitions";
         private static readonly string LIST_MARKET_CATALOGUE_METHOD = "listMarketCatalogue";
         private static readonly string LIST_MARKET_TYPES_METHOD = "listMarketTypes";
         private static readonly string LIST_MARKET_BOOK_METHOD = "listMarketBook";
@@ -88,6 +89,13 @@ namespace BetfairApi
             var args = new Dictionary<string, object>();
             args[FILTER] = marketFilter;
             return await Invoke<List<EventResult>>(LIST_EVENTS_METHOD, args);
+        }
+
+        public async Task<IList<CompetitionResult>> listCompetitions(MarketFilter marketFilter, string locale = null)
+        {
+            var args = new Dictionary<string, object>();
+            args[FILTER] = marketFilter;
+            return await Invoke<List<CompetitionResult>>(LIST_COMPETITIONS_METHOD, args);
         }
 
         public async Task<IList<MarketCatalogue>> listMarketCatalogue(MarketFilter marketFilter, ISet<MarketProjection> marketProjections, MarketSort marketSort, string maxResult = "1", string locale = null)

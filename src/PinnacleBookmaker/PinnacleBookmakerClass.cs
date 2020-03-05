@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookerMagikCore.Bookmaker;
+using EntityLibrary.Abstract.Sport;
+using EntityLibrary.Business.Sport.Football;
 using Newtonsoft.Json;
 using PinnacleBookmaker.Contracts;
 using PinnacleBookmaker.Models;
@@ -32,7 +34,7 @@ namespace PinnacleBookmaker
            
         }
 
-        public override async Task<bool> ReadEvents()
+        public override async Task<IEnumerable<FootballSportEvent>> ReadEvents()
         {
             long lastFixture = 0;
             var leagues = new[] { configuration.Leagues }.ToList();
@@ -50,7 +52,44 @@ namespace PinnacleBookmaker
 
             //Subsequent calls to GetOdds or GetFixtures should pass these 'Last' values to get only what changed since instead of the full snapshot
             lastFixture = fixtures.Last;
-            return true;
+
+            var footballEvents = new List<FootballSportEvent>();
+
+            foreach (var sportEvent in fixtures.Leagues.SelectMany(x => x.Events))
+            {
+                var footballEvent = new FootballSportEvent(sportEvent.Start, new FootballTeam(sportEvent.Home),
+                    new FootballTeam(sportEvent.Away));
+
+                footballEvents.Add(footballEvent);
+            }
+
+            return footballEvents;
+        }
+
+        public override async Task<IEnumerable<SportLeague>> ReadLeagues()
+        {
+            bool isSportFiltered = !string.IsNullOrWhiteSpace(configuration.Sports);
+            bool isLeagueFiltered = !string.IsNullOrWhiteSpace(configuration.Leagues);
+
+            List<int> sportIds = new List<int>();
+            if (!isSportFiltered)
+            {
+                var sports = await api.GetSports();
+                sportIds.AddRange(sports.Select(x => x.Id));
+            }
+            else if(int.TryParse(configuration.Sports, out int sportId))
+            {
+                sportIds.Add(sportId);
+            }
+
+            List<SportLeague> result = new List<SportLeague>();
+            foreach (var sportId in sportIds)
+            {
+                var leagues = await api.GetLeagues(sportId);
+                result.AddRange(leagues.Select(x => new SportLeague(x.Name)));
+            }
+
+            return result;
         }
     }
 }
