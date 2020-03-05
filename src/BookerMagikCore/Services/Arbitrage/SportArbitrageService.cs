@@ -1,8 +1,7 @@
-﻿using System.Runtime.Intrinsics.X86;
-using EntityLibrary.Business.Arbitrage;
+﻿using EntityLibrary.Business.Arbitrage;
 using EntityLibrary.Business.Sport.Odd;
 
-namespace EntityLibrary.Services.Arbitrage
+namespace BookerMagikCore.Services.Arbitrage
 {
     public class SportArbitrageService : ISportArbitrageService
     {

@@ -15,7 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BetfairBookmaker\BetfairBookmaker.csproj" />
     <ProjectReference Include="..\EntityLibrary\EntityLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Configurations\betfair.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

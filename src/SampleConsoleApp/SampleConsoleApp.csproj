@@ -2,15 +2,19 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Configurations\betfair.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.json">
+    <Content Include="Configurations\betfair.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configurations\pinnacle.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -20,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BetfairApi\BetfairApi.csproj" />
-    <ProjectReference Include="..\PinnacleWrapper\PinnacleWrapper.csproj" />
+    <ProjectReference Include="..\BetfairBookmaker\BetfairBookmaker.csproj" />
+    <ProjectReference Include="..\PinnacleBookmaker\PinnacleBookmaker.csproj" />
   </ItemGroup>
 
   <ItemGroup>

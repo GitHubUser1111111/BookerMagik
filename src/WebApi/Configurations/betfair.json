@@ -1,0 +1,8 @@
+{
+  "Username": "kris.pashkouskaja@gmail.com",
+  "Password": "pAs_291446637",
+  "ApplicationKey": "GdjaFHiPsE5ZJY13",
+  "CertificatePath": "@\"C:\\Work\\personal\\Betfair\\client-2048.p12\"",
+  "CertificatePassword": "",
+  "ApiEndpoint": "https://api.betfair.com/exchange/betting/rest/v1.0"
+}

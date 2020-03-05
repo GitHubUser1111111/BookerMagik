@@ -1,7 +1,7 @@
 ﻿using EntityLibrary.Business.Arbitrage;
 using EntityLibrary.Business.Sport.Odd;
 
-namespace EntityLibrary.Services.Arbitrage
+namespace BookerMagikCore.Services.Arbitrage
 {
     public interface ISportArbitrageService
     {

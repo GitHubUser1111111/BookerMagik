@@ -1,18 +1,11 @@
-using System;
-using EntityLibrary.Business.Sport.Football;
+using BookerMagikCore.Services.Arbitrage;
 using EntityLibrary.Business.Sport.Odd;
-using EntityLibrary.Services.Arbitrage;
 using Xunit;
 
 namespace Tests.Sport
 {
     public class SportEventArbitrage_Tests
     {
-        public SportEventArbitrage_Tests()
-        {
-            
-        }
-
         [Fact]
         public void GetArbitrage_Valid()
         {
@@ -20,7 +13,7 @@ namespace Tests.Sport
             var sportArbitrageService = new SportArbitrageService();
             var homeWin = new SportResultOdd(2.6m);
             var awayNotLoose = new SportResultOdd(1.79m);
-            
+
             // Act
             var arbitrage = sportArbitrageService.GetTwoResultSportArbitrage(homeWin, awayNotLoose);
 

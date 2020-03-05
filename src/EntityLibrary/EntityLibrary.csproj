@@ -6,12 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="Audit\**" />
+    <Compile Remove="Infrastructure\Audit\**" />
     <EmbeddedResource Remove="Audit\**" />
+    <EmbeddedResource Remove="Infrastructure\Audit\**" />
     <None Remove="Audit\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Infrastructure\Audit\" />
+    <None Remove="Infrastructure\Audit\**" />
   </ItemGroup>
 
 </Project>
