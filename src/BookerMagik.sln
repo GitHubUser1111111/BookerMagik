@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PinnacleBookmaker", "Pinnac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookerMagikWpf", "BookerMagikWpf\BookerMagikWpf.csproj", "{BA3B3CC8-A684-4556-9B7F-FE38A486A4F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookerMagikClientInfrastructure", "BookerMagikClientInfrastructure\BookerMagikClientInfrastructure.csproj", "{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,14 @@ Global
 		{BA3B3CC8-A684-4556-9B7F-FE38A486A4F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA3B3CC8-A684-4556-9B7F-FE38A486A4F5}.Release|x86.ActiveCfg = Release|Any CPU
 		{BA3B3CC8-A684-4556-9B7F-FE38A486A4F5}.Release|x86.Build.0 = Release|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Debug|x86.Build.0 = Debug|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Release|x86.ActiveCfg = Release|Any CPU
+		{734DE242-0FA2-452C-BBFF-8D6FBFE8946C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
