@@ -29,6 +29,8 @@ namespace BetfairBookmaker
 
         protected override TimeSpan WaitStopReadThreadTimeout => TimeSpan.FromSeconds(30);
 
+        public override string Name => "Betfair";
+
         public override async Task<bool> Login(string jsonConfiguration)
         {
             configuration = JsonConvert.DeserializeObject<ConfigurationModel>(jsonConfiguration);
@@ -59,7 +61,7 @@ namespace BetfairBookmaker
             marketProjections.Add(MarketProjection.RUNNER_METADATA);
             var listEvents = await api.listEvents(marketFilter);
 
-            var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantEvent>();
+            var bookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantEvent>();
 
             foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
             {
@@ -69,14 +71,14 @@ namespace BetfairBookmaker
 
                 var teams = name.Split(" v ");
                 var eventTime = sportEvent.Event.OpenDate.Value;
-                var BookmakerTwoParticipantSportEvent =
+                var bookmakerTwoParticipantSportEvent =
                     new BookmakerTwoParticipantEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
                         new BookmakerEventParticipant(teams[1].Trim()));
 
-                BookmakerTwoParticipantSportEvents.Add(BookmakerTwoParticipantSportEvent);
+                bookmakerTwoParticipantSportEvents.Add(bookmakerTwoParticipantSportEvent);
             }
 
-            return BookmakerTwoParticipantSportEvents;
+            return bookmakerTwoParticipantSportEvents;
         }
 
         public override async Task<IEnumerable<SportLeague>> ReadLeagues()
@@ -115,35 +117,53 @@ namespace BetfairBookmaker
             var marketFilter = new MarketFilter
             {
                 CompetitionIds = new HashSet<string>(new[] {model.Competition}),
-                MarketStartTime = model.EventTimeRange
+                MarketStartTime = model.EventTimeRange,
+                MarketTypeCodes = new HashSet<string>(new List<string>(new[] {"MATCH_ODDS"})) // type of odds
+                //MarketBettingTypes = new HashSet<MarketBettingType>(new List<MarketBettingType>(new [] {MarketBettingType.FIXED_ODDS, MarketBettingType.ODDS}))
             };
+
+            var marketProjection = new HashSet<MarketProjection>(new List<MarketProjection>(new[]
+            {
+                MarketProjection.RUNNER_DESCRIPTION,
+                MarketProjection.RUNNER_METADATA
+            }));
+
+            var price = new PriceProjection();
+            price.Virtualise = false;
+            price.PriceData = new HashSet<PriceData>(new PriceData[]
+            {
+                PriceData.EX_ALL_OFFERS, PriceData.EX_BEST_OFFERS, PriceData.SP_AVAILABLE, PriceData.SP_TRADED,
+                PriceData.EX_TRADED
+            });
+
+            BookmakerLineModel line = new BookmakerLineModel();
 
             while (true)
             {
-                // action
+                // get events
                 var listEvents = await api.listEvents(marketFilter);
+                line.UpdateEvents(listEvents);
+                
 
-                var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantEvent>();
-
-                foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
+                // get markets
+                foreach (var sportEventId in line.EventIds)
                 {
-                    var name = sportEvent.Event.Name;
-                    if (!name.Contains(" v "))
-                        continue;
+                    marketFilter.EventIds = new HashSet<string>(new[] { sportEventId});
+                    var marketCatalogue =
+                        await api.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START);
 
-                    var teams = name.Split(" v ");
-                    var eventTime = sportEvent.Event.OpenDate.Value;
-                    var BookmakerTwoParticipantSportEvent =
-                        new BookmakerTwoParticipantEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
-                            new BookmakerEventParticipant(teams[1].Trim()));
-
-                    BookmakerTwoParticipantSportEvents.Add(BookmakerTwoParticipantSportEvent);
+                    var matchOddsCatalogue = marketCatalogue[0];
+                    var marketBookList = await api.listMarketBook(new List<string>(new[] {matchOddsCatalogue.MarketId}),
+                        price, OrderProjection.ALL);
+                    var marketBook = marketBookList[0];
+                    
+                    line.UpdateOdds(sportEventId, matchOddsCatalogue, marketBook);
                 }
 
-                OnBookmakerLineChanged(BookmakerTwoParticipantSportEvents);
+                OnBookmakerLineChanged(line);
 
                 // stop
-                if (StopReadLineThreadEvent.WaitOne(1000)) break;
+                if (StopReadLineThreadEvent.WaitOne(TimeSpan.FromSeconds(1))) break;
             }
         }
     }

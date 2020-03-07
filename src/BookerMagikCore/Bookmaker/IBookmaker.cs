@@ -11,6 +11,8 @@ namespace BookerMagikCore.Bookmaker
     {
         event EventHandler<LineUpdatedEventArgs> LineUpdated;
 
+        string Name { get; }
+
         Task<bool> Login(string jsonConfiguration);
 
         Task<IEnumerable<BookmakerTwoParticipantEvent>> ReadEvents();

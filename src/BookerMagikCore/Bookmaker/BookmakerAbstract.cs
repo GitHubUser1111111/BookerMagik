@@ -18,6 +18,7 @@ namespace BookerMagikCore.Bookmaker
         protected abstract TimeSpan WaitStopReadThreadTimeout { get; }
 
         public event EventHandler<LineUpdatedEventArgs> LineUpdated;
+        public abstract string Name { get; }
         public abstract Task<bool> Login(string jsonConfiguration);
         public abstract Task<IEnumerable<BookmakerTwoParticipantEvent>> ReadEvents();
         public abstract Task<IEnumerable<SportLeague>> ReadLeagues();
@@ -46,10 +47,10 @@ namespace BookerMagikCore.Bookmaker
 
         protected abstract void ReadLineFunction(object param);
 
-        protected virtual void OnBookmakerLineChanged(IEnumerable<BookmakerTwoParticipantEvent> sportEvents)
+        protected virtual void OnBookmakerLineChanged(BookmakerLine bookmakerLine)
         {
             var handler = LineUpdated;
-            var args = new LineUpdatedEventArgs(sportEvents);
+            var args = new LineUpdatedEventArgs(bookmakerLine);
             handler?.Invoke(this, args);
         }
     }

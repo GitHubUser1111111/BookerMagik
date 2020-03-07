@@ -10,6 +10,7 @@ using PinnacleBookmaker.Contracts;
 using PinnacleBookmaker.Models;
 using PinnacleWrapper;
 using PinnacleWrapper.Data;
+using PinnacleWrapper.Enums;
 
 namespace PinnacleBookmaker
 {
@@ -21,6 +22,8 @@ namespace PinnacleBookmaker
         protected override string ReadLineThreadName => "Pinnacle read line thread";
         protected override object ReadLineThreadParameter => configuration;
         protected override TimeSpan WaitStopReadThreadTimeout => TimeSpan.FromSeconds(30);
+
+        public override string Name => "Pinnacle";
 
         public override async Task<bool> Login(string jsonConfiguration)
         {
@@ -49,7 +52,9 @@ namespace PinnacleBookmaker
                     leagueIds.Add(leagueId);
 
             var fixtures = await api.GetFixtures(new GetFixturesRequest(sportId, leagueIds, lastFixture));
-            return MapToSportEvents(fixtures);
+            return fixtures.Leagues.SelectMany(x => x.Events).Select(x =>
+                new BookmakerTwoParticipantEvent(x.Start, new BookmakerEventParticipant(x.Home),
+                    new BookmakerEventParticipant(x.Away)));
         }
 
         public override async Task<IEnumerable<SportLeague>> ReadLeagues()
@@ -103,6 +108,8 @@ namespace PinnacleBookmaker
             var fixtureRequest = new GetFixturesRequest(sportId, leagueIds, lastFixture);
             var oddsRequest = new GetOddsRequest(sportId, leagueIds, lastOdds);
 
+            var line = new BookmakerLineModel();
+
             while (true)
             {
                 var fixtures = await api.GetFixtures(fixtureRequest);
@@ -110,33 +117,22 @@ namespace PinnacleBookmaker
                 // events
                 if (fixtures != null)
                 {
-                    var footballEvents = MapToSportEvents(fixtures);
-                    OnBookmakerLineChanged(footballEvents);
+                    line.UpdateEvents(fixtures);
                     fixtureRequest.Since = fixtures.Last;
                 }
 
+                // odds
                 var odds = await api.GetOdds(oddsRequest);
-                if (odds != null) oddsRequest.Since = odds.Last;
+                if (odds != null)
+                {
+                    oddsRequest.Since = odds.Last;
+                    line.UpdateOdds(odds);
+                    OnBookmakerLineChanged(line);
+                }
 
                 // stop
-                if (StopReadLineThreadEvent.WaitOne(1000)) break;
+                if (StopReadLineThreadEvent.WaitOne(TimeSpan.FromSeconds(1))) break;
             }
-        }
-
-        public static IEnumerable<BookmakerTwoParticipantEvent> MapToSportEvents(GetFixturesResponse fixtures)
-        {
-            var footballEvents = new List<BookmakerTwoParticipantEvent>();
-
-            foreach (var sportEvent in fixtures.Leagues.SelectMany(x => x.Events))
-            {
-                var footballEvent = new BookmakerTwoParticipantEvent(sportEvent.Start,
-                    new BookmakerEventParticipant(sportEvent.Home),
-                    new BookmakerEventParticipant(sportEvent.Away));
-
-                footballEvents.Add(footballEvent);
-            }
-
-            return footballEvents;
         }
     }
 }

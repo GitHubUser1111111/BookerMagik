@@ -2,10 +2,11 @@
 {
     public enum SportOddType
     {
-        None,
-        Win,
+        HomeWin,
         Draw,
-        NotLoose,
+        AwayWin,
         NotDraw,
+        HomeNotLoose,
+        AwayNotLoose
     }
 }
