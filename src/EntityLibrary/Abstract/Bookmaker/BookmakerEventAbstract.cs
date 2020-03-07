@@ -1,17 +1,13 @@
 ﻿using System;
-using EntityLibrary.Abstract.Sport;
 
 namespace EntityLibrary.Abstract.Bookmaker
 {
     public abstract class BookmakerEventAbstract
     {
-        protected BookmakerEventAbstract(DateTime startTime, KindOfSport sport)
+        protected BookmakerEventAbstract(DateTime startTime)
         {
-            Sport = sport;
             StartTime = startTime.ToUniversalTime();
         }
-
-        public KindOfSport Sport { get; }
 
         public DateTime StartTime { get; }
 

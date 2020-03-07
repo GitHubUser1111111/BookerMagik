@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntityLibrary\EntityLibrary.csproj" />
-    <ProjectReference Include="..\PinnacleWrapper\PinnacleWrapper.csproj" />
   </ItemGroup>
 
 </Project>

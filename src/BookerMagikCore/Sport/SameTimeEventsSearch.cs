@@ -26,10 +26,6 @@ namespace BookerMagikCore.Sport
 
         public bool CheckIsSameEvents(SportEventAbstract a, SportEventAbstract b)
         {
-            if (a.Sport != b.Sport)
-                // dif by kind of sport
-                return false;
-
             var t1 = a.StartTime.ToUniversalTime();
             var t2 = b.StartTime.ToUniversalTime();
 

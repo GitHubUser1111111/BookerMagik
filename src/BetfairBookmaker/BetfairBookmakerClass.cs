@@ -21,7 +21,13 @@ namespace BetfairBookmaker
         private string token;
 
         protected override string ReadLineThreadName => "Betfair read line thread";
-        protected override object ReadLineThreadParameter => configuration;
+
+        protected override object ReadLineThreadParameter => new ReadEventsCompetitionModel()
+        {
+            Competition = configuration.Leagues,
+            EventTimeRange = new TimeRange() {From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays)}
+        };
+
         protected override TimeSpan WaitStopReadThreadTimeout => TimeSpan.FromSeconds(30);
 
         public override async Task<bool> Login(string jsonConfiguration)
@@ -103,34 +109,13 @@ namespace BetfairBookmaker
 
         protected override async void ReadLineFunction(object param)
         {
-            var configuration = (ConfigurationModel) param;
-
-            // read sport
-            var marketFilter = new MarketFilter
-            {
-                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
-                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
-            };
-
-            var sports = await api.listEventTypes(marketFilter);
-
-            // read leagues
-            marketFilter = new MarketFilter
-            {
-                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
-                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
-            };
-
-            var leagues = await api.listCompetitions(marketFilter);
+            var model = (ReadEventsCompetitionModel) param;
 
             // read events
-            var time = new TimeRange { From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays) };
-            marketFilter = new MarketFilter
+            var marketFilter = new MarketFilter
             {
-                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
-                CompetitionIds = new HashSet<string>(new[] { configuration.Leagues }),
-                MarketCountries = new HashSet<string>(new[] { configuration.Countries }),
-                MarketStartTime = time
+                CompetitionIds = new HashSet<string>(new[] { model.Competition }),
+                MarketStartTime = model.EventTimeRange
             };
 
             while (true)
@@ -138,6 +123,23 @@ namespace BetfairBookmaker
                 // action
                 var listEvents = await api.listEvents(marketFilter);
 
+                var footballSportEvents = new List<FootballSportEvent>();
+
+                foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
+                {
+                    var name = sportEvent.Event.Name;
+                    if (!name.Contains(" v "))
+                        continue;
+
+                    var teams = name.Split(" v ");
+                    var eventTime = sportEvent.Event.OpenDate.Value;
+                    var footballSportEvent =
+                        new FootballSportEvent(eventTime, new FootballTeam(teams[0].Trim()), new FootballTeam(teams[1].Trim()));
+
+                    footballSportEvents.Add(footballSportEvent);
+                }
+                OnBookmakerLineChanged(footballSportEvents);
+                
                 // stop
                 if (StopReadLineThreadEvent.WaitOne(1000))
                 {

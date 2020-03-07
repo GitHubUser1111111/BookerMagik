@@ -5,9 +5,9 @@ namespace EntityLibrary.Abstract.Sport
 {
     public abstract class SportEventAbstract : BookmakerEventAbstract
     {
-        protected SportEventAbstract(DateTime startTime, KindOfSport kindOfSport,
+        protected SportEventAbstract(DateTime startTime,
             SportEventParticipantAbstract homeTeam,
-            SportEventParticipantAbstract awayTeam) : base(startTime, kindOfSport)
+            SportEventParticipantAbstract awayTeam) : base(startTime)
         {
             HomeTeam = homeTeam;
             AwayTeam = awayTeam;

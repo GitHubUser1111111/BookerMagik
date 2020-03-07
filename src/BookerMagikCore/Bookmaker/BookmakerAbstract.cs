@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using BookerMagikCore.Common.EventArguments;
 using EntityLibrary.Abstract.Sport;
 using EntityLibrary.Business.Sport.Football;
 
@@ -15,6 +16,8 @@ namespace BookerMagikCore.Bookmaker
         protected abstract string ReadLineThreadName { get; }
         protected abstract object ReadLineThreadParameter { get; }
         protected abstract TimeSpan WaitStopReadThreadTimeout { get; }
+
+        public event EventHandler<LineUpdatedEventArgs> LineUpdated;
         public abstract Task<bool> Login(string jsonConfiguration);
         public abstract Task<IEnumerable<FootballSportEvent>> ReadEvents();
         public abstract Task<IEnumerable<SportLeague>> ReadLeagues();
@@ -42,5 +45,12 @@ namespace BookerMagikCore.Bookmaker
         }
         
         protected abstract void ReadLineFunction(object param);
+
+        protected virtual void OnBookmakerLineChanged(IEnumerable<FootballSportEvent> sportEvents)
+        {
+            EventHandler<LineUpdatedEventArgs> handler = LineUpdated;
+            LineUpdatedEventArgs args = new LineUpdatedEventArgs(sportEvents);
+            handler?.Invoke(this, args);
+        }
     }
 }

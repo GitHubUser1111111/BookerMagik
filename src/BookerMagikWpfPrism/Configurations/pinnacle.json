@@ -1,0 +1,11 @@
+{
+  "Username": "PM838866",
+  "Password": "88@super",
+  "Currency": "USD",
+  "OddsFormat": "DECIMAL",
+  "ApiEndpoint": "https://api.pinnacle.com/",
+  "Sports": "29",
+  "Leagues": "1980",
+  "Countries": "GB",
+  "AddDays": 7
+}

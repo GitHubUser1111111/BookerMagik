@@ -53,21 +53,7 @@ namespace PinnacleBookmaker
             }
 
             var fixtures = await api.GetFixtures(new GetFixturesRequest(sportId, leagueIds, lastFixture));
-
-            //Subsequent calls to GetOdds or GetFixtures should pass these 'Last' values to get only what changed since instead of the full snapshot
-            lastFixture = fixtures.Last;
-
-            var footballEvents = new List<FootballSportEvent>();
-
-            foreach (var sportEvent in fixtures.Leagues.SelectMany(x => x.Events))
-            {
-                var footballEvent = new FootballSportEvent(sportEvent.Start, new FootballTeam(sportEvent.Home),
-                    new FootballTeam(sportEvent.Away));
-
-                footballEvents.Add(footballEvent);
-            }
-
-            return footballEvents;
+            return MapToSportEvents(fixtures);
         }
 
         public override async Task<IEnumerable<SportLeague>> ReadLeagues()
@@ -102,9 +88,67 @@ namespace PinnacleBookmaker
             return sports.Select(x => new SportType(x.Name));
         }
 
-        protected override void ReadLineFunction(object param)
+        protected override async void ReadLineFunction(object param)
         {
-            throw new NotImplementedException();
+            ConfigurationModel configuration = (ConfigurationModel) param;
+
+            long lastFixture = 0;
+            long lastOdds = 0;
+
+            var leagues = new[] { configuration.Leagues }.ToList();
+
+            int.TryParse(configuration.Sports, out var sportId);
+
+            var leagueIds = new List<int>();
+            foreach (var league in configuration.Leagues.Split())
+            {
+                if (int.TryParse(league, out int leagueId))
+                    leagueIds.Add(leagueId);
+            }
+
+            var fixtureRequest = new GetFixturesRequest(sportId, leagueIds, lastFixture);
+            var oddsRequest =new GetOddsRequest(sportId, leagueIds, lastOdds);
+
+            while (true)
+            {
+                var fixtures = await api.GetFixtures(fixtureRequest);
+                
+                // events
+                if (fixtures != null)
+                {
+                    var footballEvents = MapToSportEvents(fixtures);
+                    OnBookmakerLineChanged(footballEvents);
+                    fixtureRequest.Since = fixtures.Last;
+                }
+
+                var odds = await api.GetOdds(oddsRequest);
+                if (odds != null)
+                {
+                    oddsRequest.Since = odds.Last;
+                }
+
+                // stop
+                if (StopReadLineThreadEvent.WaitOne(1000))
+                {
+                    break;
+                }
+            }
         }
+
+        public static IEnumerable<FootballSportEvent> MapToSportEvents(GetFixturesResponse fixtures)
+        {
+            var footballEvents = new List<FootballSportEvent>();
+
+            foreach (var sportEvent in fixtures.Leagues.SelectMany(x => x.Events))
+            {
+                var footballEvent = new FootballSportEvent(sportEvent.Start, new FootballTeam(sportEvent.Home),
+                    new FootballTeam(sportEvent.Away));
+
+                footballEvents.Add(footballEvent);
+            }
+
+            return footballEvents;
+        }
+
     }
 }

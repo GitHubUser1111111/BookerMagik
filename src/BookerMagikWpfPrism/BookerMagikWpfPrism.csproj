@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>BookerMagikWpfPrism</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Configurations\betfair.json" />
+    <None Remove="Configurations\pinnacle.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configurations\betfair.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configurations\pinnacle.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Prism.Unity" Version="7.2.0.1367" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BetfairBookmaker\BetfairBookmaker.csproj" />
+    <ProjectReference Include="..\EntityLibrary\EntityLibrary.csproj" />
+    <ProjectReference Include="..\PinnacleBookmaker\PinnacleBookmaker.csproj" />
+  </ItemGroup>
+</Project>

@@ -33,7 +33,7 @@ namespace EntityLibrary.Business.Sport.Football
         /// </summary>
         public SportResultOdd AwayNotLoose { get; set; }
 
-        public FootballSportEvent(DateTime startTime, FootballTeam homeTeam, FootballTeam awayTeam) : base(startTime, KindOfSport.Football, homeTeam, awayTeam)
+        public FootballSportEvent(DateTime startTime, FootballTeam homeTeam, FootballTeam awayTeam) : base(startTime, homeTeam, awayTeam)
         {
         }
     }
