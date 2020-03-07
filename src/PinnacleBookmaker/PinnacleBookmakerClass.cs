@@ -18,6 +18,10 @@ namespace PinnacleBookmaker
         private PinnacleClient api;
         private ConfigurationModel configuration;
 
+        protected override string ReadLineThreadName => "Pinnacle read line thread";
+        protected override object ReadLineThreadParameter => configuration;
+        protected override TimeSpan WaitStopReadThreadTimeout => TimeSpan.FromSeconds(30);
+
         public override async Task<bool> Login(string jsonConfiguration)
         {
             configuration = JsonConvert.DeserializeObject<ConfigurationModel>(jsonConfiguration);
@@ -90,6 +94,17 @@ namespace PinnacleBookmaker
             }
 
             return result;
+        }
+
+        public override async Task<IEnumerable<SportType>> ReadSports()
+        {
+            var sports = await api.GetSports();
+            return sports.Select(x => new SportType(x.Name));
+        }
+
+        protected override void ReadLineFunction(object param)
+        {
+            throw new NotImplementedException();
         }
     }
 }

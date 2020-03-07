@@ -19,7 +19,11 @@ namespace BetfairBookmaker
         private IClient api;
         private ConfigurationModel configuration;
         private string token;
-        
+
+        protected override string ReadLineThreadName => "Betfair read line thread";
+        protected override object ReadLineThreadParameter => configuration;
+        protected override TimeSpan WaitStopReadThreadTimeout => TimeSpan.FromSeconds(30);
+
         public override async Task<bool> Login(string jsonConfiguration)
         {
             configuration = JsonConvert.DeserializeObject<ConfigurationModel>(jsonConfiguration);
@@ -82,6 +86,65 @@ namespace BetfairBookmaker
             List<SportLeague> result = new List<SportLeague>();
             result.AddRange(leagues.Select(x => new SportLeague(x.Competition.Name)));
             return result;
+        }
+
+        public override async Task<IEnumerable<SportType>> ReadSports()
+        {
+            var marketFilter = new MarketFilter
+            {
+                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
+                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
+            };
+
+            var types = await api.listEventTypes(marketFilter);
+
+            return types.Select(x => new SportType(x.EventType.Name));
+        }
+
+        protected override async void ReadLineFunction(object param)
+        {
+            var configuration = (ConfigurationModel) param;
+
+            // read sport
+            var marketFilter = new MarketFilter
+            {
+                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
+                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
+            };
+
+            var sports = await api.listEventTypes(marketFilter);
+
+            // read leagues
+            marketFilter = new MarketFilter
+            {
+                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
+                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
+            };
+
+            var leagues = await api.listCompetitions(marketFilter);
+
+            // read events
+            var time = new TimeRange { From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays) };
+            marketFilter = new MarketFilter
+            {
+                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
+                CompetitionIds = new HashSet<string>(new[] { configuration.Leagues }),
+                MarketCountries = new HashSet<string>(new[] { configuration.Countries }),
+                MarketStartTime = time
+            };
+
+            while (true)
+            {
+                // action
+                var listEvents = await api.listEvents(marketFilter);
+
+                // stop
+                if (StopReadLineThreadEvent.WaitOne(1000))
+                {
+                    break;
+                }
+            }
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BookerMagikCore.Infrastructure;
 using EntityLibrary.Abstract.Sport;
@@ -95,14 +96,16 @@ namespace BookerMagikCore.Sport
 
         public bool CheckIsSameLeague(SportLeague a, SportLeague b)
         {
-            var splitsA = a.Name.Split(' ', '-');
-            var splitsB = b.Name.Split(' ', '-');
-            if (splitsA.Length != splitsB.Length)
+            var splitsA = a.Name.Split(' ', '-').ToList();
+            splitsA.RemoveAll(string.IsNullOrWhiteSpace);
+            var splitsB = b.Name.Split(' ', '-').ToList();
+            splitsB.RemoveAll(string.IsNullOrWhiteSpace);
+            if (splitsA.Count != splitsB.Count)
             {
                 return false;
             }
 
-            for (int i = 0; i < splitsA.Length; i++)
+            for (int i = 0; i < splitsA.Count; i++)
             {
                 if (splitsA[i].Length < 3 || splitsB[i].Length < 3)
                     return false;

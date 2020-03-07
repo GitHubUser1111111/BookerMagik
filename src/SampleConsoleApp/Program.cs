@@ -25,29 +25,31 @@ namespace SampleConsoleApp
 
             // Betfair
             var betfairBookmaker = await CreateBetfairBookmakerAsync();
-            Console.WriteLine("Get Betfair leagues...");
-            var betfairLeagues = await betfairBookmaker.ReadLeagues();
-            Console.WriteLine("Get Betfair events...");
-            var betfairEvents = await betfairBookmaker.ReadEvents();
+            betfairBookmaker.StartReadLineThread();
+            //Console.WriteLine("Get Betfair leagues...");
+            //var betfairLeagues = await betfairBookmaker.ReadLeagues();
+            //Console.WriteLine("Get Betfair events...");
+            //var betfairEvents = await betfairBookmaker.ReadEvents();
 
             // Pinnacle
             var pinnacleBookmaker = await CreatePinnacleBookmakerAsync();
-            Console.WriteLine("Get Pinnacle leagues...");
-            var pinnacleLeagues = await pinnacleBookmaker.ReadLeagues();
-            Console.WriteLine("Get Pinnacle events...");
-            var pinnacleEvents = await pinnacleBookmaker.ReadEvents();
+            //pinnacleBookmaker.StartReadLineThread();
+            //Console.WriteLine("Get Pinnacle leagues...");
+            //var pinnacleLeagues = await pinnacleBookmaker.ReadLeagues();
+            //Console.WriteLine("Get Pinnacle events...");
+            //var pinnacleEvents = await pinnacleBookmaker.ReadEvents();
 
             // searcher
-            ISameTimeEventsSearch sameTimeEvents =
-                new SameTimeEventsSearch(new SimilarStringsCalculator(), new LongestCommonSubsequence());
+            //ISameTimeEventsSearch sameTimeEvents =
+            //    new SameTimeEventsSearch(new SimilarStringsCalculator(), new LongestCommonSubsequence());
 
-            // Find same leagues
-            Console.WriteLine("Start link leagues...");
-            LinkLeagues(sameTimeEvents, betfairLeagues.ToList(), pinnacleLeagues.ToList());
+            //// Find same leagues
+            //Console.WriteLine("Start link leagues...");
+            //LinkLeagues(sameTimeEvents, betfairLeagues.ToList(), pinnacleLeagues.ToList());
 
-            // Find same events
-            Console.WriteLine("Start link events...");
-            LinkEvents(sameTimeEvents, betfairEvents.ToList(), pinnacleEvents.ToList());
+            //// Find same events
+            //Console.WriteLine("Start link events...");
+            //LinkEvents(sameTimeEvents, betfairEvents.ToList(), pinnacleEvents.ToList());
             //
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
@@ -84,6 +86,9 @@ namespace SampleConsoleApp
         private static int LinkLeagues(ISameTimeEventsSearch search, List<SportLeague> leaguesA,
             List<SportLeague> leaguesB)
         {
+            Console.WriteLine("===========================");
+            Console.WriteLine("======Linked leagues=======");
+            Console.WriteLine("===========================");
             foreach (var la in leaguesA)
             {
                 foreach (var lb in leaguesB)
@@ -102,6 +107,10 @@ namespace SampleConsoleApp
 
         private static int LinkEvents(ISameTimeEventsSearch search, List<FootballSportEvent> eventsA, List<FootballSportEvent> eventsB)
         {
+            Console.WriteLine("===========================");
+            Console.WriteLine("======Linked events=======");
+            Console.WriteLine("===========================");
+
             List<Tuple<FootballSportEvent, FootballSportEvent>> linked = new List<Tuple<FootballSportEvent, FootballSportEvent>>();
             List<Tuple<FootballSportEvent, FootballSportEvent>> notLinked = new List<Tuple<FootballSportEvent, FootballSportEvent>>();
             foreach (var a in eventsA)
@@ -113,11 +122,6 @@ namespace SampleConsoleApp
                         linked.Add(new Tuple<FootballSportEvent, FootballSportEvent>(a, b));
                     else
                     {
-                        //if (a.HomeTeam.Name.Contains("Arse") && b.AwayTeam.Name.Contains("West"))
-                        //{
-                        //    Console.WriteLine("SSS");
-                        //}
-
                         notLinked.Add(new Tuple<FootballSportEvent, FootballSportEvent>(a, b));
                     }
                     

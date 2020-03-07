@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using EntityLibrary.Abstract.Bookmaker;
 using EntityLibrary.Abstract.Sport;
 using EntityLibrary.Business.Sport.Football;
 
@@ -12,5 +14,11 @@ namespace BookerMagikCore.Bookmaker
         Task<IEnumerable<FootballSportEvent>> ReadEvents();
 
         Task<IEnumerable<SportLeague>> ReadLeagues();
+
+        Task<IEnumerable<SportType>> ReadSports();
+
+        void StartReadLineThread();
+
+        void StopReadLineThread();
     }
 }
