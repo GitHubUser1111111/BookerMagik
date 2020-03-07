@@ -36,7 +36,7 @@ namespace PinnacleBookmaker
             return balance != null;
         }
 
-        public override async Task<IEnumerable<BookmakerTwoParticipantSportEvent>> ReadEvents()
+        public override async Task<IEnumerable<BookmakerTwoParticipantEvent>> ReadEvents()
         {
             long lastFixture = 0;
             var leagues = new[] {configuration.Leagues}.ToList();
@@ -123,13 +123,13 @@ namespace PinnacleBookmaker
             }
         }
 
-        public static IEnumerable<BookmakerTwoParticipantSportEvent> MapToSportEvents(GetFixturesResponse fixtures)
+        public static IEnumerable<BookmakerTwoParticipantEvent> MapToSportEvents(GetFixturesResponse fixtures)
         {
-            var footballEvents = new List<BookmakerTwoParticipantSportEvent>();
+            var footballEvents = new List<BookmakerTwoParticipantEvent>();
 
             foreach (var sportEvent in fixtures.Leagues.SelectMany(x => x.Events))
             {
-                var footballEvent = new BookmakerTwoParticipantSportEvent(sportEvent.Start,
+                var footballEvent = new BookmakerTwoParticipantEvent(sportEvent.Start,
                     new BookmakerEventParticipant(sportEvent.Home),
                     new BookmakerEventParticipant(sportEvent.Away));
 

@@ -11,7 +11,7 @@ namespace BookerMagikCore.Sport
         /// <param name="a">sport event</param>
         /// <param name="b">sport event</param>
         /// <returns>same events</returns>
-        bool CheckIsSameEvents(BookmakerTwoParticipantSportEvent a, BookmakerTwoParticipantSportEvent b);
+        bool CheckIsSameEvents(BookmakerTwoParticipantEvent a, BookmakerTwoParticipantEvent b);
 
         /// <summary>
         ///     Check if leagues is same

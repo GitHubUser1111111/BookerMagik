@@ -9,11 +9,11 @@ namespace BookerMagikCore.Common.EventArguments
 {
     public class LineUpdatedEventArgs : EventArgs
     {
-        public LineUpdatedEventArgs(IEnumerable<BookmakerTwoParticipantSportEvent> sportEvents)
+        public LineUpdatedEventArgs(IEnumerable<BookmakerTwoParticipantEvent> sportEvents)
         {
-            SportEvents = new ReadOnlyCollection<BookmakerTwoParticipantSportEvent>(sportEvents.ToList());
+            SportEvents = new ReadOnlyCollection<BookmakerTwoParticipantEvent>(sportEvents.ToList());
         }
 
-        public ReadOnlyCollection<BookmakerTwoParticipantSportEvent> SportEvents { get; }
+        public ReadOnlyCollection<BookmakerTwoParticipantEvent> SportEvents { get; }
     }
 }

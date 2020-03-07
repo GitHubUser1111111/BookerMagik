@@ -99,24 +99,24 @@ namespace SampleConsoleApp
             return 0;
         }
 
-        private static int LinkEvents(ISameTimeEventsSearch search, List<BookmakerTwoParticipantSportEvent> eventsA,
-            List<BookmakerTwoParticipantSportEvent> eventsB)
+        private static int LinkEvents(ISameTimeEventsSearch search, List<BookmakerTwoParticipantEvent> eventsA,
+            List<BookmakerTwoParticipantEvent> eventsB)
         {
             Console.WriteLine("===========================");
             Console.WriteLine("======Linked events=======");
             Console.WriteLine("===========================");
 
-            var linked = new List<Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>>();
-            var notLinked = new List<Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>>();
+            var linked = new List<Tuple<BookmakerTwoParticipantEvent, BookmakerTwoParticipantEvent>>();
+            var notLinked = new List<Tuple<BookmakerTwoParticipantEvent, BookmakerTwoParticipantEvent>>();
             foreach (var a in eventsA)
             foreach (var b in eventsB)
             {
                 var isSame = search.CheckIsSameEvents(a, b);
                 if (isSame)
-                    linked.Add(new Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>(a, b));
+                    linked.Add(new Tuple<BookmakerTwoParticipantEvent, BookmakerTwoParticipantEvent>(a, b));
                 else
                     notLinked.Add(
-                        new Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>(a, b));
+                        new Tuple<BookmakerTwoParticipantEvent, BookmakerTwoParticipantEvent>(a, b));
             }
 
             foreach (var link in linked)

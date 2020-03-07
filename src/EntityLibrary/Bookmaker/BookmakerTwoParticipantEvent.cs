@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 
-namespace EntityLibrary.Bookmaker.Sport
+namespace EntityLibrary.Bookmaker
 {
-    public class BookmakerTwoParticipantSportEvent : BookmakerEvent
+    [DebuggerDisplay("{StartTime}: {HomeTeam.Name} vs {AwayTeam.Name}")]
+    public class BookmakerTwoParticipantEvent : BookmakerEvent
     {
-        public BookmakerTwoParticipantSportEvent(DateTime startTime,
+        public BookmakerTwoParticipantEvent(DateTime startTime,
             BookmakerEventParticipant homeTeam,
             BookmakerEventParticipant awayTeam) : base(startTime)
         {

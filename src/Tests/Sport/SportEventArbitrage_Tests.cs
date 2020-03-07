@@ -1,5 +1,5 @@
 using BookerMagikCore.Services.Arbitrage;
-using EntityLibrary.Bookmaker.Sport.Odd;
+using EntityLibrary.Bookmaker;
 using Xunit;
 
 namespace Tests.Sport
@@ -11,8 +11,8 @@ namespace Tests.Sport
         {
             // Arrange
             var sportArbitrageService = new SportArbitrageService();
-            var homeWin = new SportResultOdd(2.6m);
-            var awayNotLoose = new SportResultOdd(1.79m);
+            var homeWin = new BookmakerEventOdd(2.6m);
+            var awayNotLoose = new BookmakerEventOdd(1.79m);
 
             // Act
             var arbitrage = sportArbitrageService.GetTwoResultSportArbitrage(homeWin, awayNotLoose);

@@ -43,7 +43,7 @@ namespace BetfairBookmaker
             return await Task.FromResult(true);
         }
 
-        public override async Task<IEnumerable<BookmakerTwoParticipantSportEvent>> ReadEvents()
+        public override async Task<IEnumerable<BookmakerTwoParticipantEvent>> ReadEvents()
         {
             var time = new TimeRange {From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays)};
             var marketFilter = new MarketFilter
@@ -59,7 +59,7 @@ namespace BetfairBookmaker
             marketProjections.Add(MarketProjection.RUNNER_METADATA);
             var listEvents = await api.listEvents(marketFilter);
 
-            var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantSportEvent>();
+            var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantEvent>();
 
             foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
             {
@@ -70,7 +70,7 @@ namespace BetfairBookmaker
                 var teams = name.Split(" v ");
                 var eventTime = sportEvent.Event.OpenDate.Value;
                 var BookmakerTwoParticipantSportEvent =
-                    new BookmakerTwoParticipantSportEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
+                    new BookmakerTwoParticipantEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
                         new BookmakerEventParticipant(teams[1].Trim()));
 
                 BookmakerTwoParticipantSportEvents.Add(BookmakerTwoParticipantSportEvent);
@@ -123,7 +123,7 @@ namespace BetfairBookmaker
                 // action
                 var listEvents = await api.listEvents(marketFilter);
 
-                var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantSportEvent>();
+                var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantEvent>();
 
                 foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
                 {
@@ -134,7 +134,7 @@ namespace BetfairBookmaker
                     var teams = name.Split(" v ");
                     var eventTime = sportEvent.Event.OpenDate.Value;
                     var BookmakerTwoParticipantSportEvent =
-                        new BookmakerTwoParticipantSportEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
+                        new BookmakerTwoParticipantEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
                             new BookmakerEventParticipant(teams[1].Trim()));
 
                     BookmakerTwoParticipantSportEvents.Add(BookmakerTwoParticipantSportEvent);

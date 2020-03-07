@@ -1,5 +1,8 @@
-﻿namespace EntityLibrary.Bookmaker.Sport
+﻿using System.Diagnostics;
+
+namespace EntityLibrary.Bookmaker.Sport
 {
+    [DebuggerDisplay("{Name}")]
     public class SportType
     {
         public string Name { get; }

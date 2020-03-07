@@ -22,9 +22,9 @@ namespace Tests.Sport
             ISameTimeEventsSearch sameTimeEventsSearch =
                 new SameTimeEventsSearch(similarStringsCalculator, longestCommonSubsequence);
             var sameTime = DateTime.UtcNow;
-            var e1 = new BookmakerTwoParticipantSportEvent(sameTime, new BookmakerEventParticipant(a),
+            var e1 = new BookmakerTwoParticipantEvent(sameTime, new BookmakerEventParticipant(a),
                 new BookmakerEventParticipant(b));
-            var e2 = new BookmakerTwoParticipantSportEvent(sameTime, new BookmakerEventParticipant(c),
+            var e2 = new BookmakerTwoParticipantEvent(sameTime, new BookmakerEventParticipant(c),
                 new BookmakerEventParticipant(d));
 
             // Act

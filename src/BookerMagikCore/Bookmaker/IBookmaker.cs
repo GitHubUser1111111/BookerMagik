@@ -13,7 +13,7 @@ namespace BookerMagikCore.Bookmaker
 
         Task<bool> Login(string jsonConfiguration);
 
-        Task<IEnumerable<BookmakerTwoParticipantSportEvent>> ReadEvents();
+        Task<IEnumerable<BookmakerTwoParticipantEvent>> ReadEvents();
 
         Task<IEnumerable<SportLeague>> ReadLeagues();
 

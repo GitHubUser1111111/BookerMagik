@@ -26,7 +26,7 @@ namespace BookerMagikCore.Sport
             threashold = 5;
         }
 
-        public bool CheckIsSameEvents(BookmakerTwoParticipantSportEvent a, BookmakerTwoParticipantSportEvent b)
+        public bool CheckIsSameEvents(BookmakerTwoParticipantEvent a, BookmakerTwoParticipantEvent b)
         {
             var t1 = a.StartTime.ToUniversalTime();
             var t2 = b.StartTime.ToUniversalTime();

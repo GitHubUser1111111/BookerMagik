@@ -1,6 +1,6 @@
-﻿namespace EntityLibrary.Bookmaker.Sport.Odd
+﻿namespace EntityLibrary.Bookmaker.Sport
 {
-    public enum OddType
+    public enum SportOddType
     {
         None,
         Win,
