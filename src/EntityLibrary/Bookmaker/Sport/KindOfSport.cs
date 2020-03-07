@@ -1,4 +1,4 @@
-﻿namespace EntityLibrary.Abstract.Sport
+﻿namespace EntityLibrary.Bookmaker.Sport
 {
     public enum KindOfSport
     {

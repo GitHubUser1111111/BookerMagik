@@ -1,5 +1,5 @@
-﻿using EntityLibrary.Business.Arbitrage;
-using EntityLibrary.Business.Sport.Odd;
+﻿using EntityLibrary.Bookmaker.Sport.Odd;
+using EntityLibrary.Business.Arbitrage;
 
 namespace BookerMagikCore.Services.Arbitrage
 {
@@ -29,7 +29,7 @@ namespace BookerMagikCore.Services.Arbitrage
         /// <returns>bet amount</returns>
         public decimal CalculateBetAmount(decimal coefficient, decimal arbitrageWeight, decimal totalAmount)
         {
-            decimal oddAmount = (1 / coefficient / arbitrageWeight) * totalAmount;
+            var oddAmount = 1 / coefficient / arbitrageWeight * totalAmount;
             return oddAmount;
         }
     }

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookerMagikCore.Common.EventArguments;
-using EntityLibrary.Abstract.Bookmaker;
-using EntityLibrary.Abstract.Sport;
-using EntityLibrary.Business.Sport.Football;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 
 namespace BookerMagikCore.Bookmaker
 {
@@ -14,7 +13,7 @@ namespace BookerMagikCore.Bookmaker
 
         Task<bool> Login(string jsonConfiguration);
 
-        Task<IEnumerable<FootballSportEvent>> ReadEvents();
+        Task<IEnumerable<BookmakerTwoParticipantSportEvent>> ReadEvents();
 
         Task<IEnumerable<SportLeague>> ReadLeagues();
 

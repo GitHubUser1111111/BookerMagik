@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using EntityLibrary.Business.Sport.Football;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 
 namespace BookerMagikCore.Common.EventArguments
 {
     public class LineUpdatedEventArgs : EventArgs
     {
-        public ReadOnlyCollection<FootballSportEvent> SportEvents { get; }
-
-        public LineUpdatedEventArgs(IEnumerable<FootballSportEvent> sportEvents)
+        public LineUpdatedEventArgs(IEnumerable<BookmakerTwoParticipantSportEvent> sportEvents)
         {
-            SportEvents = new ReadOnlyCollection<FootballSportEvent>(sportEvents.ToList());
+            SportEvents = new ReadOnlyCollection<BookmakerTwoParticipantSportEvent>(sportEvents.ToList());
         }
+
+        public ReadOnlyCollection<BookmakerTwoParticipantSportEvent> SportEvents { get; }
     }
 }

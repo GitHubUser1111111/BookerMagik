@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using BookerMagikCore.Common.EventArguments;
-using EntityLibrary.Abstract.Sport;
-using EntityLibrary.Business.Sport.Football;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 
 namespace BookerMagikCore.Bookmaker
 {
@@ -19,7 +19,7 @@ namespace BookerMagikCore.Bookmaker
 
         public event EventHandler<LineUpdatedEventArgs> LineUpdated;
         public abstract Task<bool> Login(string jsonConfiguration);
-        public abstract Task<IEnumerable<FootballSportEvent>> ReadEvents();
+        public abstract Task<IEnumerable<BookmakerTwoParticipantSportEvent>> ReadEvents();
         public abstract Task<IEnumerable<SportLeague>> ReadLeagues();
         public abstract Task<IEnumerable<SportType>> ReadSports();
 
@@ -43,13 +43,13 @@ namespace BookerMagikCore.Bookmaker
 
             readLineThread = null;
         }
-        
+
         protected abstract void ReadLineFunction(object param);
 
-        protected virtual void OnBookmakerLineChanged(IEnumerable<FootballSportEvent> sportEvents)
+        protected virtual void OnBookmakerLineChanged(IEnumerable<BookmakerTwoParticipantSportEvent> sportEvents)
         {
-            EventHandler<LineUpdatedEventArgs> handler = LineUpdated;
-            LineUpdatedEventArgs args = new LineUpdatedEventArgs(sportEvents);
+            var handler = LineUpdated;
+            var args = new LineUpdatedEventArgs(sportEvents);
             handler?.Invoke(this, args);
         }
     }

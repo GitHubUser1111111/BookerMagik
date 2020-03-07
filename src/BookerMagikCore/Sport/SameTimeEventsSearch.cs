@@ -1,30 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BookerMagikCore.Infrastructure;
-using EntityLibrary.Abstract.Sport;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 
 namespace BookerMagikCore.Sport
 {
     public class SameTimeEventsSearch : ISameTimeEventsSearch
     {
-        private readonly ISimilarStringsCalculator _similarStringsCalculator;
         private readonly ILongestCommonSubsequence _commonSubsequence;
-        private readonly int threashold;
+        private readonly ISimilarStringsCalculator _similarStringsCalculator;
 
         private readonly IReadOnlyCollection<string> abbreviation = new[]
         {
             "fc", "bc"
         };
 
-        public SameTimeEventsSearch(ISimilarStringsCalculator similarStringsCalculator, ILongestCommonSubsequence commonSubsequence)
+        private readonly int threashold;
+
+        public SameTimeEventsSearch(ISimilarStringsCalculator similarStringsCalculator,
+            ILongestCommonSubsequence commonSubsequence)
         {
             _similarStringsCalculator = similarStringsCalculator;
             _commonSubsequence = commonSubsequence;
             threashold = 5;
         }
 
-        public bool CheckIsSameEvents(SportEventAbstract a, SportEventAbstract b)
+        public bool CheckIsSameEvents(BookmakerTwoParticipantSportEvent a, BookmakerTwoParticipantSportEvent b)
         {
             var t1 = a.StartTime.ToUniversalTime();
             var t2 = b.StartTime.ToUniversalTime();
@@ -45,7 +47,7 @@ namespace BookerMagikCore.Sport
             if (h1.Equals(h11) && h2.Equals(h22))
                 // time and team equals
                 return true;
-            
+
             // words count
             var h1count = h1.Split().ToList();
             var h11count = h11.Split().ToList();
@@ -58,17 +60,17 @@ namespace BookerMagikCore.Sport
 
             var h2count = h2.Split().ToList();
             var h22count = h22.Split().ToList();
-           
+
             // trim abbreviation
             h2count.RemoveAll(x => abbreviation.Contains(x));
             h22count.RemoveAll(x => abbreviation.Contains(x));
             if (h2count.Count != h22count.Count)
                 return false;
 
-            int totalDistance = 0;
+            var totalDistance = 0;
 
             // home
-            for (int i = 0; i < h1count.Count; i++)
+            for (var i = 0; i < h1count.Count; i++)
             {
                 var d = CalculateDistance(h1count[i], h11count[i]);
                 if (d >= threashold)
@@ -76,9 +78,9 @@ namespace BookerMagikCore.Sport
 
                 totalDistance += d;
             }
-            
+
             // away
-            for (int i = 0; i < h2count.Count; i++)
+            for (var i = 0; i < h2count.Count; i++)
             {
                 var d = CalculateDistance(h2count[i], h22count[i]);
                 if (d >= threashold)
@@ -86,7 +88,7 @@ namespace BookerMagikCore.Sport
 
                 totalDistance += d;
             }
-            
+
             return totalDistance < threashold;
         }
 
@@ -96,12 +98,9 @@ namespace BookerMagikCore.Sport
             splitsA.RemoveAll(string.IsNullOrWhiteSpace);
             var splitsB = b.Name.Split(' ', '-').ToList();
             splitsB.RemoveAll(string.IsNullOrWhiteSpace);
-            if (splitsA.Count != splitsB.Count)
-            {
-                return false;
-            }
+            if (splitsA.Count != splitsB.Count) return false;
 
-            for (int i = 0; i < splitsA.Count; i++)
+            for (var i = 0; i < splitsA.Count; i++)
             {
                 if (splitsA[i].Length < 3 || splitsB[i].Length < 3)
                     return false;
@@ -134,10 +133,8 @@ namespace BookerMagikCore.Sport
             var d = b.TrimStart(sub.ToCharArray());
 
             if (string.IsNullOrWhiteSpace(c) || string.IsNullOrWhiteSpace(d))
-            {
                 // one of word is abbreviation
                 return 1;
-            }
 
             var distance = _similarStringsCalculator.DamerauLevenshteinDistance(a, b);
             return distance;

@@ -1,7 +1,8 @@
 using System;
 using BookerMagikCore.Infrastructure;
 using BookerMagikCore.Sport;
-using EntityLibrary.Business.Sport.Football;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 using Xunit;
 
 namespace Tests.Sport
@@ -21,8 +22,10 @@ namespace Tests.Sport
             ISameTimeEventsSearch sameTimeEventsSearch =
                 new SameTimeEventsSearch(similarStringsCalculator, longestCommonSubsequence);
             var sameTime = DateTime.UtcNow;
-            var e1 = new FootballSportEvent(sameTime, new FootballTeam(a), new FootballTeam(b));
-            var e2 = new FootballSportEvent(sameTime, new FootballTeam(c), new FootballTeam(d));
+            var e1 = new BookmakerTwoParticipantSportEvent(sameTime, new BookmakerEventParticipant(a),
+                new BookmakerEventParticipant(b));
+            var e2 = new BookmakerTwoParticipantSportEvent(sameTime, new BookmakerEventParticipant(c),
+                new BookmakerEventParticipant(d));
 
             // Act
             var isSame = sameTimeEventsSearch.CheckIsSameEvents(e1, e2);

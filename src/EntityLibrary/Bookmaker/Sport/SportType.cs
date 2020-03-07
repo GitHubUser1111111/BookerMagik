@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EntityLibrary.Abstract.Sport
+﻿namespace EntityLibrary.Bookmaker.Sport
 {
     public class SportType
     {

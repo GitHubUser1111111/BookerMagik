@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace EntityLibrary.Abstract.Bookmaker
+namespace EntityLibrary.Bookmaker
 {
-    public abstract class BookmakerEventAbstract
+    public class BookmakerEvent
     {
-        protected BookmakerEventAbstract(DateTime startTime)
+        public BookmakerEvent(DateTime startTime)
         {
             StartTime = startTime.ToUniversalTime();
         }

@@ -1,5 +1,5 @@
 using BookerMagikCore.Services.Arbitrage;
-using EntityLibrary.Business.Sport.Odd;
+using EntityLibrary.Bookmaker.Sport.Odd;
 using Xunit;
 
 namespace Tests.Sport

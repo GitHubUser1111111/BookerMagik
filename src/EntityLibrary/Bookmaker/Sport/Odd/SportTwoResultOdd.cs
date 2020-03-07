@@ -1,6 +1,4 @@
-﻿using EntityLibrary.Abstract.Sport;
-
-namespace EntityLibrary.Business.Sport.Odd
+﻿namespace EntityLibrary.Bookmaker.Sport.Odd
 {
     /// <summary>
     /// Tennis e.g.

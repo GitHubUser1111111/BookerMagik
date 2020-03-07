@@ -1,5 +1,5 @@
-﻿using EntityLibrary.Business.Arbitrage;
-using EntityLibrary.Business.Sport.Odd;
+﻿using EntityLibrary.Bookmaker.Sport.Odd;
+using EntityLibrary.Business.Arbitrage;
 
 namespace BookerMagikCore.Services.Arbitrage
 {

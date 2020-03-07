@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 
-namespace EntityLibrary.Abstract.Sport
+namespace EntityLibrary.Bookmaker.Sport
 {
     [DebuggerDisplay("{Name}")]
     public class SportLeague

@@ -1,4 +1,5 @@
-﻿using EntityLibrary.Abstract.Sport;
+﻿using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 
 namespace BookerMagikCore.Sport
 {
@@ -10,7 +11,7 @@ namespace BookerMagikCore.Sport
         /// <param name="a">sport event</param>
         /// <param name="b">sport event</param>
         /// <returns>same events</returns>
-        bool CheckIsSameEvents(SportEventAbstract a, SportEventAbstract b);
+        bool CheckIsSameEvents(BookmakerTwoParticipantSportEvent a, BookmakerTwoParticipantSportEvent b);
 
         /// <summary>
         ///     Check if leagues is same

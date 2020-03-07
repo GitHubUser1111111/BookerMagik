@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +7,8 @@ using BetfairApi.TO;
 using BetfairBookmaker.Contracts;
 using BetfairBookmaker.Models;
 using BookerMagikCore.Bookmaker;
-using EntityLibrary.Abstract.Sport;
-using EntityLibrary.Business.Sport.Football;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 using Newtonsoft.Json;
 
 namespace BetfairBookmaker
@@ -22,10 +21,10 @@ namespace BetfairBookmaker
 
         protected override string ReadLineThreadName => "Betfair read line thread";
 
-        protected override object ReadLineThreadParameter => new ReadEventsCompetitionModel()
+        protected override object ReadLineThreadParameter => new ReadEventsCompetitionModel
         {
             Competition = configuration.Leagues,
-            EventTimeRange = new TimeRange() {From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays)}
+            EventTimeRange = new TimeRange {From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays)}
         };
 
         protected override TimeSpan WaitStopReadThreadTimeout => TimeSpan.FromSeconds(30);
@@ -44,23 +43,23 @@ namespace BetfairBookmaker
             return await Task.FromResult(true);
         }
 
-        public override async Task<IEnumerable<FootballSportEvent>> ReadEvents()
+        public override async Task<IEnumerable<BookmakerTwoParticipantSportEvent>> ReadEvents()
         {
-            var time = new TimeRange { From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays) };
+            var time = new TimeRange {From = DateTime.Now, To = DateTime.Now.AddDays(configuration.AddDays)};
             var marketFilter = new MarketFilter
             {
-                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
-                CompetitionIds = new HashSet<string>(new[] { configuration.Leagues }),
-                MarketCountries = new HashSet<string>(new[] { configuration.Countries }),
+                EventTypeIds = new HashSet<string>(new[] {configuration.Sports}),
+                CompetitionIds = new HashSet<string>(new[] {configuration.Leagues}),
+                MarketCountries = new HashSet<string>(new[] {configuration.Countries}),
                 MarketStartTime = time
             };
-            
+
             //as an example we requested runner metadata 
             ISet<MarketProjection> marketProjections = new HashSet<MarketProjection>();
             marketProjections.Add(MarketProjection.RUNNER_METADATA);
             var listEvents = await api.listEvents(marketFilter);
 
-            var footballSportEvents = new List<FootballSportEvent>();
+            var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantSportEvent>();
 
             foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
             {
@@ -70,26 +69,27 @@ namespace BetfairBookmaker
 
                 var teams = name.Split(" v ");
                 var eventTime = sportEvent.Event.OpenDate.Value;
-                var footballSportEvent =
-                    new FootballSportEvent(eventTime, new FootballTeam(teams[0].Trim()), new FootballTeam(teams[1].Trim()));
+                var BookmakerTwoParticipantSportEvent =
+                    new BookmakerTwoParticipantSportEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
+                        new BookmakerEventParticipant(teams[1].Trim()));
 
-                footballSportEvents.Add(footballSportEvent);
+                BookmakerTwoParticipantSportEvents.Add(BookmakerTwoParticipantSportEvent);
             }
 
-            return footballSportEvents;
+            return BookmakerTwoParticipantSportEvents;
         }
 
         public override async Task<IEnumerable<SportLeague>> ReadLeagues()
         {
             var marketFilter = new MarketFilter
             {
-                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
-                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
+                EventTypeIds = new HashSet<string>(new[] {configuration.Sports}),
+                MarketCountries = new HashSet<string>(new[] {configuration.Countries})
             };
 
             var leagues = await api.listCompetitions(marketFilter);
 
-            List<SportLeague> result = new List<SportLeague>();
+            var result = new List<SportLeague>();
             result.AddRange(leagues.Select(x => new SportLeague(x.Competition.Name)));
             return result;
         }
@@ -98,8 +98,8 @@ namespace BetfairBookmaker
         {
             var marketFilter = new MarketFilter
             {
-                EventTypeIds = new HashSet<string>(new[] { configuration.Sports }),
-                MarketCountries = new HashSet<string>(new[] { configuration.Countries })
+                EventTypeIds = new HashSet<string>(new[] {configuration.Sports}),
+                MarketCountries = new HashSet<string>(new[] {configuration.Countries})
             };
 
             var types = await api.listEventTypes(marketFilter);
@@ -114,7 +114,7 @@ namespace BetfairBookmaker
             // read events
             var marketFilter = new MarketFilter
             {
-                CompetitionIds = new HashSet<string>(new[] { model.Competition }),
+                CompetitionIds = new HashSet<string>(new[] {model.Competition}),
                 MarketStartTime = model.EventTimeRange
             };
 
@@ -123,7 +123,7 @@ namespace BetfairBookmaker
                 // action
                 var listEvents = await api.listEvents(marketFilter);
 
-                var footballSportEvents = new List<FootballSportEvent>();
+                var BookmakerTwoParticipantSportEvents = new List<BookmakerTwoParticipantSportEvent>();
 
                 foreach (var sportEvent in listEvents.Where(x => x.Event.OpenDate.HasValue))
                 {
@@ -133,20 +133,18 @@ namespace BetfairBookmaker
 
                     var teams = name.Split(" v ");
                     var eventTime = sportEvent.Event.OpenDate.Value;
-                    var footballSportEvent =
-                        new FootballSportEvent(eventTime, new FootballTeam(teams[0].Trim()), new FootballTeam(teams[1].Trim()));
+                    var BookmakerTwoParticipantSportEvent =
+                        new BookmakerTwoParticipantSportEvent(eventTime, new BookmakerEventParticipant(teams[0].Trim()),
+                            new BookmakerEventParticipant(teams[1].Trim()));
 
-                    footballSportEvents.Add(footballSportEvent);
+                    BookmakerTwoParticipantSportEvents.Add(BookmakerTwoParticipantSportEvent);
                 }
-                OnBookmakerLineChanged(footballSportEvents);
-                
+
+                OnBookmakerLineChanged(BookmakerTwoParticipantSportEvents);
+
                 // stop
-                if (StopReadLineThreadEvent.WaitOne(1000))
-                {
-                    break;
-                }
+                if (StopReadLineThreadEvent.WaitOne(1000)) break;
             }
-
         }
     }
 }

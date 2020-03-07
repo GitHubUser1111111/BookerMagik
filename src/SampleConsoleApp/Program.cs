@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using BetfairBookmaker;
 using BetfairBookmaker.Contracts;
-using BookerMagikCore.Infrastructure;
 using BookerMagikCore.Sport;
-using EntityLibrary.Abstract.Sport;
-using EntityLibrary.Business.Sport.Football;
+using EntityLibrary.Bookmaker;
+using EntityLibrary.Bookmaker.Sport;
 using NLog;
 using PinnacleBookmaker;
 using PinnacleBookmaker.Contracts;
@@ -90,42 +88,35 @@ namespace SampleConsoleApp
             Console.WriteLine("======Linked leagues=======");
             Console.WriteLine("===========================");
             foreach (var la in leaguesA)
-            {
-                foreach (var lb in leaguesB)
+            foreach (var lb in leaguesB)
+                if (search.CheckIsSameLeague(la, lb))
                 {
-                    if (search.CheckIsSameLeague(la, lb))
-                    {
-                        Console.WriteLine("===========================");
-                        Console.WriteLine($"Betfair: {la.Name}");
-                        Console.WriteLine($"Pinnacle: {lb.Name}");
-                    }
+                    Console.WriteLine("===========================");
+                    Console.WriteLine($"Betfair: {la.Name}");
+                    Console.WriteLine($"Pinnacle: {lb.Name}");
                 }
-            }
 
             return 0;
         }
 
-        private static int LinkEvents(ISameTimeEventsSearch search, List<FootballSportEvent> eventsA, List<FootballSportEvent> eventsB)
+        private static int LinkEvents(ISameTimeEventsSearch search, List<BookmakerTwoParticipantSportEvent> eventsA,
+            List<BookmakerTwoParticipantSportEvent> eventsB)
         {
             Console.WriteLine("===========================");
             Console.WriteLine("======Linked events=======");
             Console.WriteLine("===========================");
 
-            List<Tuple<FootballSportEvent, FootballSportEvent>> linked = new List<Tuple<FootballSportEvent, FootballSportEvent>>();
-            List<Tuple<FootballSportEvent, FootballSportEvent>> notLinked = new List<Tuple<FootballSportEvent, FootballSportEvent>>();
+            var linked = new List<Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>>();
+            var notLinked = new List<Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>>();
             foreach (var a in eventsA)
+            foreach (var b in eventsB)
             {
-                foreach (var b in eventsB)
-                {
-                    bool isSame = search.CheckIsSameEvents(a, b);
-                    if(isSame)
-                        linked.Add(new Tuple<FootballSportEvent, FootballSportEvent>(a, b));
-                    else
-                    {
-                        notLinked.Add(new Tuple<FootballSportEvent, FootballSportEvent>(a, b));
-                    }
-                    
-                }
+                var isSame = search.CheckIsSameEvents(a, b);
+                if (isSame)
+                    linked.Add(new Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>(a, b));
+                else
+                    notLinked.Add(
+                        new Tuple<BookmakerTwoParticipantSportEvent, BookmakerTwoParticipantSportEvent>(a, b));
             }
 
             foreach (var link in linked)
@@ -134,7 +125,7 @@ namespace SampleConsoleApp
                 Console.WriteLine($"Betfair: {link.Item1.HomeTeam.Name} vs {link.Item2.AwayTeam.Name}");
                 Console.WriteLine($"Pinnacle: {link.Item2.HomeTeam.Name} vs {link.Item2.AwayTeam.Name}");
             }
-            
+
             //foreach (var link in notLinked)
             //{
             //    if (link.Item1.HomeTeam.Name.Length <= 3 || link.Item1.AwayTeam.Name.Length <= 3 ||
