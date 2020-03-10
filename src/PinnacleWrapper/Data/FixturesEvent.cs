@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using Newtonsoft.Json;
 using PinnacleWrapper.Enums;
 
 namespace PinnacleWrapper.Data
 {
+    [DebuggerDisplay("{Home} vs {Away}")]
     public class FixturesEvent
     {
         [JsonProperty(PropertyName = "id")] 

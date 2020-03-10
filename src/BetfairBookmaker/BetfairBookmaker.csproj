@@ -14,4 +14,10 @@
     <ProjectReference Include="..\EntityLibrary\EntityLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\3.1.0\ref\netcoreapp3.1\System.Windows.Forms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

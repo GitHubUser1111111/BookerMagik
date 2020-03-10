@@ -38,11 +38,7 @@ namespace PinnacleBookmaker.Models
                 }
 
                 var eventModel = _eventsDictionary[oddsEvent.Id];
-                if (oddsEvent.Periods.Count < 2)
-                    continue;
-
-                var fullTimePeriod = oddsEvent.Periods[1];
-                eventModel.UpdateOdds(fullTimePeriod.MoneyLine);
+                eventModel.UpdateOdds(oddsEvent);
             }
         }
 

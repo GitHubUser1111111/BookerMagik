@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms.ComponentModel.Com2Interop;
 using BetfairApi;
 using BetfairApi.TO;
 using BetfairBookmaker.Contracts;
@@ -118,7 +119,7 @@ namespace BetfairBookmaker
             {
                 CompetitionIds = new HashSet<string>(new[] {model.Competition}),
                 MarketStartTime = model.EventTimeRange,
-                MarketTypeCodes = new HashSet<string>(new List<string>(new[] {"MATCH_ODDS"})) // type of odds
+                MarketTypeCodes = new HashSet<string>(new List<string>(new[] {"MATCH_ODDS", "DOUBLE_CHANCE" })), // type of odds
                 //MarketBettingTypes = new HashSet<MarketBettingType>(new List<MarketBettingType>(new [] {MarketBettingType.FIXED_ODDS, MarketBettingType.ODDS}))
             };
 
@@ -132,8 +133,8 @@ namespace BetfairBookmaker
             price.Virtualise = false;
             price.PriceData = new HashSet<PriceData>(new PriceData[]
             {
-                PriceData.EX_ALL_OFFERS, PriceData.EX_BEST_OFFERS, PriceData.SP_AVAILABLE, PriceData.SP_TRADED,
-                PriceData.EX_TRADED
+                //PriceData.EX_ALL_OFFERS, PriceData.EX_BEST_OFFERS, PriceData.SP_AVAILABLE, PriceData.SP_TRADED,
+                //PriceData.EX_TRADED
             });
 
             BookmakerLineModel line = new BookmakerLineModel();
@@ -150,14 +151,26 @@ namespace BetfairBookmaker
                 {
                     marketFilter.EventIds = new HashSet<string>(new[] { sportEventId});
                     var marketCatalogue =
-                        await api.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START);
+                        await api.listMarketCatalogue(marketFilter, marketProjection, MarketSort.FIRST_TO_START, maxResult: "2");
 
+                    if (marketCatalogue.Count < 2)
+                    {
+                        continue;
+                    }
+
+                    // match odds
                     var matchOddsCatalogue = marketCatalogue[0];
                     var marketBookList = await api.listMarketBook(new List<string>(new[] {matchOddsCatalogue.MarketId}),
                         price, OrderProjection.ALL);
                     var marketBook = marketBookList[0];
-                    
                     line.UpdateOdds(sportEventId, matchOddsCatalogue, marketBook);
+
+                    // match odds
+                    var dcCatalogue = marketCatalogue[1];
+                    var dcMarketBookList = await api.listMarketBook(new List<string>(new[] { dcCatalogue.MarketId }),
+                        price, OrderProjection.ALL);
+                    var dcMarketBook = dcMarketBookList[0];
+                    line.UpdateOdds(sportEventId, dcCatalogue, dcMarketBook);
                 }
 
                 OnBookmakerLineChanged(line);

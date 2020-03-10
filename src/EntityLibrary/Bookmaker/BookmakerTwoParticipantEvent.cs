@@ -10,6 +10,8 @@ namespace EntityLibrary.Bookmaker
     {
         private readonly Dictionary<SportOddType, decimal> _oddsDictionary = new Dictionary<SportOddType, decimal>();
 
+        public IReadOnlyDictionary<SportOddType, decimal> OddsDictionary => _oddsDictionary;
+
         public BookmakerTwoParticipantEvent(DateTime startTime,
             BookmakerEventParticipant homeTeam,
             BookmakerEventParticipant awayTeam) : base(startTime)

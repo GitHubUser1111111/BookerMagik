@@ -18,7 +18,6 @@ namespace BookerMagikCore.Bookmaker
 
         private readonly object lineLock = new object();
         private readonly BookmakerGlobalLine _globalLine = new BookmakerGlobalLine();
-        private int updatesCount;
 
         public GlobalBookmaker(ISameTimeEventsSearch sameTimeEventsSearch, ISportArbitrageService sportArbitrageService)
         {
@@ -67,6 +66,11 @@ namespace BookerMagikCore.Bookmaker
         {
             foreach (var bookmakerMergeEvent in events)
             {
+                var arbitrage = _sportArbitrageService.GetArbitrage(bookmakerMergeEvent);
+                if (arbitrage != null)
+                {
+                    var profit = arbitrage.Profit;
+                }
             }
         }
 

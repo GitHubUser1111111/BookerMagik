@@ -11,6 +11,8 @@ namespace BookerMagikCore.Services.Arbitrage
 
         BookmakerEventArbitrage Get2X1Arbitrage(BookmakerEventOdd awayWin, BookmakerEventOdd homeNotLoose);
 
+        BookmakerEventArbitrage GetArbitrage(BookmakerMergeEvent mergeEvent);
+
         decimal CalculateBetAmount(decimal coefficient, decimal arbitrageWeight, decimal totalAmount);
     }
 }
